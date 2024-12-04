@@ -18,7 +18,6 @@ pub fn read_file_to_string(path: &str) -> String {
     return file_contents;
 }
 
-
 pub fn read_file_to_u8(path: &str) -> Vec<u8> {
     let file = File::open(path);
 
