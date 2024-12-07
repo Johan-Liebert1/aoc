@@ -162,7 +162,7 @@ pub fn day6p2() {
     let initial_guard_direction = grid[r][c];
 
     // (row, pos, direction)
-    let mut set: HashSet<(usize, usize, char)> = HashSet::new();
+    let mut set: HashSet<(usize, usize, char)>;
 
     let mut total_obstacle_to_loop = 0;
 
