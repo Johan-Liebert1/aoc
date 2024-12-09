@@ -8,8 +8,9 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 mod utils;
 
 fn main() {
-    day8::day8p2();
+    day9::day9p2();
 }
