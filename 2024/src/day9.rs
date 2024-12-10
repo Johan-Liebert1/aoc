@@ -138,12 +138,15 @@ pub fn day9p2() {
         let mut free_space_end = free_space_start;
 
         while free_space_end <= disk_fragment_start {
+            // println!("free_space_start: {free_space_start}");
+
             free_space_start = free_space_end;
 
             while free_space_end < input_vec.len()
                 && matches!(input_vec[free_space_end], InputType::FreeSpace)
             {
                 free_space_end += 1;
+                // println!("free_space_end: {free_space_end}");
             }
 
             // found the first place where we can fit the files
@@ -151,16 +154,22 @@ pub fn day9p2() {
                 break;
             }
 
+            // println!("free_space_end += 1;");
             free_space_end += 1;
         }
 
         let left = free_space_start;
         let right = last_disk_fragment_idx;
 
+        // println!("free_space_start: {free_space_start}, free_space_end: {free_space_end}, disk_fragment_start: {disk_fragment_start}, last_disk_fragment_idx: {last_disk_fragment_idx}");
+
         let mut number_of_free_spaces = free_space_end - free_space_start;
 
         // ugly check
-        if !matches!(input_vec[free_space_start], InputType::FreeSpace) {
+        if !matches!(input_vec[free_space_start], InputType::FreeSpace)
+            || (!matches!(input_vec[free_space_start], InputType::FreeSpace)
+                || !matches!(input_vec[free_space_start - 1], InputType::FreeSpace))
+        {
             number_of_free_spaces = 0;
         }
 
