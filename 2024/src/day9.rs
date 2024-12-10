@@ -122,9 +122,6 @@ pub fn day9p2() {
         panic!("Bruh")
     };
 
-    println!("Input Vec len: {}", input_vec.len());
-
-    // check how many free spaces and how many of file we have
     while last_disk_fragment_idx > 1 {
         let mut disk_fragment_start = last_disk_fragment_idx;
 
@@ -140,7 +137,7 @@ pub fn day9p2() {
         let mut free_space_start = 0;
         let mut free_space_end = free_space_start;
 
-        while free_space_end <= disk_fragment_start + 1 {
+        while free_space_end <= disk_fragment_start {
             free_space_start = free_space_end;
 
             while free_space_end < input_vec.len()
@@ -174,11 +171,8 @@ pub fn day9p2() {
         if number_of_free_spaces >= number_of_files {
             for i in 0..number_of_files {
                 input_vec.swap(left + i, right - i);
-                // println!("swapping: {} {}", free_space + i, num_files + i);
             }
         }
-
-        // println!("");
 
         last_disk_fragment_idx = disk_fragment_start;
 
