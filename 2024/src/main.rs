@@ -13,5 +13,5 @@ mod day10;
 mod utils;
 
 fn main() {
-    day10::day10p2();
+    day2::day2p2();
 }

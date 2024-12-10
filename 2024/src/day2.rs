@@ -1,5 +1,30 @@
 use crate::utils;
 
+fn is_sorted(v: &Vec<i32>) -> bool {
+    let mut first = v[0];
+    let mut second = v[1];
+
+    if first == second || first.abs_diff(second) > 3 {
+        return false;
+    }
+
+    let inc = first < second;
+
+    first = second;
+
+    for i in 2..v.len() {
+        second = v[i];
+
+        if (inc && second <= first) || (!inc && second >= first) || first.abs_diff(second) > 3 {
+            return false;
+        }
+
+        first = second;
+    }
+
+    return true;
+}
+
 pub fn day2p1() {
     let file_contents = utils::read_file_to_string("./inputs/2");
 
@@ -12,31 +37,7 @@ pub fn day2p1() {
 
         let v: Vec<i32> = line.split(" ").map(|y| y.parse::<i32>().unwrap()).collect();
 
-        let mut first = v[0];
-        let mut second = v[1];
-
-        if first == second || first.abs_diff(second) > 3 {
-            continue;
-        }
-
-        let inc = first < second;
-
-        first = second;
-
-        let mut is_safe = true;
-
-        'o: for i in 2..v.len() {
-            second = v[i];
-
-            if (inc && second <= first) || (!inc && second >= first) || first.abs_diff(second) > 3 {
-                is_safe = false;
-                break 'o;
-            }
-
-            first = second;
-        }
-
-        if is_safe {
+        if is_sorted(&v) {
             num_safe += 1;
         }
     }
@@ -59,37 +60,18 @@ pub fn day2p2() {
             .map(|y| y.parse::<i32>().unwrap())
             .collect();
 
-        let mut removed = 0;
-        let mut is_safe = true;
+        let mut is_safe = false;
 
-        let mut increasing = v[1] > v[0];
+        for i in 0..v.len() {
+            // remove i
+            
+            let left = &mut v[0..i].to_vec();
+            left.extend(v[i + 1..].to_vec());
 
-        for i in 1..v.len() {
-            if removed > 1 {
-                is_safe = false;
+            if is_sorted(left) {
+                is_safe = true;
                 break;
             }
-
-            let second = v[i];
-            let first = v[i - 1];
-
-            if first == second || first.abs_diff(second) > 3 {
-                removed += 1;
-                continue;
-            }
-
-            if (increasing && second < first) || (!increasing && second > first) {
-                removed += 1;
-
-                if i > 1 && ((second > v[i - 2]) != increasing) {
-                    is_safe = false;
-                    break;
-                }
-
-                continue;
-            }
-
-            increasing = second > first;
         }
 
         if is_safe {
