@@ -167,8 +167,7 @@ pub fn day9p2() {
 
         // ugly check
         if !matches!(input_vec[free_space_start], InputType::FreeSpace)
-            || (!matches!(input_vec[free_space_start], InputType::FreeSpace)
-                || !matches!(input_vec[free_space_start - 1], InputType::FreeSpace))
+            || !matches!(input_vec[free_space_end - 1], InputType::FreeSpace)
         {
             number_of_free_spaces = 0;
         }

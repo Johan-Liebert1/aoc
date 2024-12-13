@@ -50,17 +50,43 @@ impl Display for CameFrom {
 }
 
 const DIRECTIONS: [(i32, i32, CameFrom); 4] = [
-    (-1, 0, CameFrom::Down),  // up
-    (1, 0, CameFrom::Up),     // down
-    (0, -1, CameFrom::Right), // left
-    (0, 1, CameFrom::Left),   // right
+    (-1, 0, CameFrom::Up),  // up
+    (1, 0, CameFrom::Down),     // down
+    (0, -1, CameFrom::Left), // left
+    (0, 1, CameFrom::Right),   // right
 ];
 
 fn is_in_bounds(grid: &Grid, row: i32, col: i32) -> bool {
     return row >= 0 && col >= 0 && row < grid.len() as i32 && col < grid[0].len() as i32;
 }
 
-fn get_perimeter(grid: &Grid, visited: &mut Cache, row: usize, col: usize) -> (i32, i32) {
+fn is_neighbor(grid: &Grid, row: i32, col: i32, nrow: i32, ncol: i32) -> bool {
+    return is_in_bounds(grid, row, col)
+        && is_in_bounds(grid, nrow, ncol)
+        && grid[row as usize][col as usize] == grid[nrow as usize][ncol as usize];
+}
+
+fn get_grid() -> (Grid, Cache) {
+    let file_contents = utils::read_file_to_string("./inputs/12");
+
+    let mut grid: Grid = vec![];
+
+    for line in file_contents.lines() {
+        grid.push(line.chars().collect());
+    }
+
+    let visited: Cache = vec![vec![false; grid[0].len()]; grid.len()];
+
+    return (grid, visited);
+}
+
+fn get_perimeter(
+    grid: &Grid,
+    visited: &mut Cache,
+    row: usize,
+    col: usize,
+    with_discount: bool,
+) -> (i32, i32) {
     use CameFrom::*;
 
     let mut perimeter = 0;
@@ -87,41 +113,59 @@ fn get_perimeter(grid: &Grid, visited: &mut Cache, row: usize, col: usize) -> (i
             }
 
             _ => {
-                let mut total_connected_neighbors = 0;
+                if !with_discount {
+                    let mut total_connected_neighbors = 0;
 
-                for (ra, ca, _) in DIRECTIONS {
-                    let (nrow, ncol) = (c_row + ra, c_col + ca);
+                    for (ra, ca, _) in DIRECTIONS {
+                        let (nrow, ncol) = (c_row + ra, c_col + ca);
 
-                    if is_in_bounds(grid, nrow, ncol)
-                        && visited[nrow as usize][ncol as usize]
-                        && grid[nrow as usize][ncol as usize]
-                            == grid[c_row as usize][c_col as usize]
-                    {
-                        total_connected_neighbors += 1;
+                        if is_neighbor(grid, c_row, c_col, nrow, ncol)
+                            && visited[nrow as usize][ncol as usize]
+                        {
+                            total_connected_neighbors += 1;
+                        }
                     }
-                }
 
-                if total_connected_neighbors == 1 {
-                    perimeter += 2;
-                } else if total_connected_neighbors == 3 {
-                    perimeter -= 2;
-                } else if total_connected_neighbors == 4 {
-                    perimeter -= 4;
+                    if total_connected_neighbors == 1 {
+                        perimeter += 2;
+                    } else if total_connected_neighbors == 3 {
+                        perimeter -= 2;
+                    } else if total_connected_neighbors == 4 {
+                        perimeter -= 4;
+                    }
+                } else {
+                    for (ra, ca, neighbor_dir) in DIRECTIONS {
+                        let (nrow, ncol) = (c_row + ra, c_col + ca);
+
+                        if is_neighbor(grid, c_row, c_col, nrow, ncol)
+                            && visited[nrow as usize][ncol as usize]
+                        {
+                            match neighbor_dir {
+                                Left => todo!(),
+
+                                Right => todo!(),
+
+                                Up => todo!(),
+
+                                Down => todo!(),
+
+                                First => todo!(),
+                            }
+                        }
+                    }
                 }
             }
         };
 
         for (d_row, d_col, d_came_from) in DIRECTIONS {
-            let (n_row, n_col) = (c_row + d_row, c_col + d_col);
+            let (nrow, ncol) = (c_row + d_row, c_col + d_col);
 
-            if is_in_bounds(grid, n_row, n_col)
-                && grid[n_row as usize][n_col as usize] == grid[row][col]
-            {
-                if visited[n_row as usize][n_col as usize] {
+            if is_neighbor(grid, c_row, c_col, nrow, ncol) {
+                if visited[nrow as usize][ncol as usize] {
                     continue;
                 }
 
-                queue.push((n_row, n_col, d_came_from));
+                queue.push((nrow, ncol, d_came_from.opposite()));
             }
         }
     }
@@ -130,22 +174,31 @@ fn get_perimeter(grid: &Grid, visited: &mut Cache, row: usize, col: usize) -> (i
 }
 
 pub fn day12p1() {
-    let file_contents = utils::read_file_to_string("./inputs/12");
-
-    let mut grid: Grid = vec![];
-
-    for line in file_contents.lines() {
-        grid.push(line.chars().collect());
-    }
-
-    let mut visited: Cache = vec![vec![false; grid[0].len()]; grid.len()];
+    let (grid, mut visited) = get_grid();
 
     let mut total = 0;
 
     for row in 0..grid.len() {
         for col in 0..grid[0].len() {
             if !visited[row][col] {
-                let (perimeter, area) = get_perimeter(&grid, &mut visited, row, col);
+                let (perimeter, area) = get_perimeter(&grid, &mut visited, row, col, false);
+                total += area * perimeter;
+            }
+        }
+    }
+
+    println!("Day 12 P1: {total}");
+}
+
+pub fn day12p2() {
+    let (grid, mut visited) = get_grid();
+
+    let mut total = 0;
+
+    for row in 0..grid.len() {
+        for col in 0..grid[0].len() {
+            if !visited[row][col] {
+                let (perimeter, area) = get_perimeter(&grid, &mut visited, row, col, true);
                 total += area * perimeter;
             }
         }
