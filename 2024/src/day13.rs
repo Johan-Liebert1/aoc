@@ -150,12 +150,11 @@ fn can_reach_prize(
 //
 // a = (3000 + 45(Y - 34a) / 67) / 60
 fn can_reach_prize_2() -> u64 {
+    0
 }
 
 pub fn day13p1() {
     let mut values = parse_input();
-
-    println!("{values:?}");
 
     let mut cache = [[-1; 100]; 100];
 
@@ -188,7 +187,7 @@ pub fn day13p2() {
         v.x += 10000000000000;
         v.y += 10000000000000;
 
-        let res = can_reach_prize_2(v, v.x, v.y, 0, 0);
+        let res = can_reach_prize_2();
         // cache = [[-1; 100]; 100];
 
         println!("v: {v:?}, res: {res}");
