@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::fs::File;
 use std::io::Read;
 use std::process::exit;
@@ -32,4 +33,18 @@ pub fn read_file_to_u8(path: &str) -> Vec<u8> {
     let _ = file.read_to_end(&mut file_contents);
 
     return file_contents;
+}
+
+pub fn is_in_bounds<T: Sized>(map: &Vec<Vec<T>>, row: i32, col: i32) -> bool {
+    return row >= 0 && col >= 0 && row < map.len() as i32 && col < map[0].len() as i32;
+}
+
+pub fn print_grid<T: Display>(grid: &Vec<Vec<T>>) {
+    for row in grid {
+        for c in row {
+            print!("{}", c)
+        }
+
+        println!();
+    }
 }

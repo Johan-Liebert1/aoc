@@ -10,6 +10,7 @@ mod day15;
 mod day16;
 mod day16_stolen;
 mod day17;
+mod day18;
 mod day2;
 mod day3;
 mod day4;
@@ -21,5 +22,5 @@ mod day9;
 mod utils;
 
 fn main() {
-    println!("{}",day16_stolen::part2());
+    day18::part2()
 }
