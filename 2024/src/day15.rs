@@ -351,15 +351,18 @@ fn make_move_p2(
             }
 
             // move the robot
-            if matches!(map[(initial_robot_r + ra) as usize][initial_robot_c as usize], Empty) {
+            if matches!(
+                map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
+                Empty
+            ) {
                 moved = true;
-            (
-                map[initial_robot_r as usize][initial_robot_c as usize],
-                map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
-            ) = (
-                map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
-                map[initial_robot_r as usize][initial_robot_c as usize],
-            );
+                (
+                    map[initial_robot_r as usize][initial_robot_c as usize],
+                    map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
+                ) = (
+                    map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
+                    map[initial_robot_r as usize][initial_robot_c as usize],
+                );
             }
 
             if moved {

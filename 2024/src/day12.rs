@@ -50,10 +50,10 @@ impl Display for CameFrom {
 }
 
 const DIRECTIONS: [(i32, i32, CameFrom); 4] = [
-    (-1, 0, CameFrom::Up),  // up
-    (1, 0, CameFrom::Down),     // down
+    (-1, 0, CameFrom::Up),   // up
+    (1, 0, CameFrom::Down),  // down
     (0, -1, CameFrom::Left), // left
-    (0, 1, CameFrom::Right),   // right
+    (0, 1, CameFrom::Right), // right
 ];
 
 fn is_in_bounds(grid: &Grid, row: i32, col: i32) -> bool {

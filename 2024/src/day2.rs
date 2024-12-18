@@ -64,7 +64,7 @@ pub fn day2p2() {
 
         for i in 0..v.len() {
             // remove i
-            
+
             let left = &mut v[0..i].to_vec();
             left.extend(v[i + 1..].to_vec());
 

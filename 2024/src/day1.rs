@@ -24,13 +24,11 @@ pub fn day1() {
         v2.push(second);
 
         match map.get_mut(&second) {
-            Some(v) => {
-                *v += 1
-            },
+            Some(v) => *v += 1,
 
             None => {
                 map.insert(second, 1);
-            },
+            }
         }
     });
 
@@ -46,7 +44,7 @@ pub fn day1() {
     let mut total_part_2 = 0;
 
     for a in v1 {
-        let to_mul =  match map.get(&a) {
+        let to_mul = match map.get(&a) {
             Some(v) => *v,
             None => 0,
         };
