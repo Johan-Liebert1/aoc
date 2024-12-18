@@ -8,6 +8,8 @@ mod day13;
 mod day14;
 mod day15;
 mod day16;
+mod day16_stolen;
+mod day17;
 mod day2;
 mod day3;
 mod day4;
@@ -18,8 +20,6 @@ mod day8;
 mod day9;
 mod utils;
 
-mod day17;
-
 fn main() {
-    day17::day17p1();
+    println!("{}",day16_stolen::part2());
 }
