@@ -136,5 +136,8 @@ pub fn part2() {
     let mut coord = ffed_coordinates[last_unreachable].clone();
     coord.reverse();
 
-    println!("Day18 P2: Last unreachable: {last_unreachable}. Coordinate: {:?}", coord);
+    println!(
+        "Day18 P2: Last unreachable: {last_unreachable}. Coordinate: {:?}",
+        coord
+    );
 }

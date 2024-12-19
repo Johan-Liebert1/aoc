@@ -290,7 +290,7 @@ struct Tile {
 }
 
 pub fn part2() -> usize {
-    let input = include_str!("/home/pragyan/aoc/2024/inputs/16");
+    let input = ""; // include_str!("/home/pragyan/aoc/2024/inputs/16");
     let maze = Maze::from(input);
     let min_cost = maze.dijkstra();
     maze.dijkstra_with_backtrack(min_cost)
