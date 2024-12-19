@@ -1,5 +1,5 @@
 use core::panic;
-use std::{fmt::Display, usize};
+use std::{fmt::Display, i32, usize};
 
 use crate::utils;
 
@@ -78,7 +78,6 @@ fn make_move_p1(
     };
 
     if !is_in_bounds(map, initial_robot_r + ra, initial_robot_c + ca) {
-        println!("not in bounds first");
         return (r as usize, c as usize);
     }
 
@@ -110,8 +109,6 @@ fn make_move_p1(
             if !matches!(map[erow as usize][ecol as usize], Empty) {
                 return (r as usize, c as usize);
             }
-
-            // println!("erow: {erow}, ecol: {ecol}, initial_robot_r: {initial_robot_r}, initial_robot_c: {initial_robot_c}");
 
             // (erow, ecol) is empty
             // move all the boxes here
@@ -281,42 +278,44 @@ fn make_move_p2(
             };
 
             let mut to_move: Vec<(i32, i32)> = vec![(initial_robot_r, initial_robot_c)];
-
             let mut queue: Vec<(i32, i32)> = vec![(initial_robot_r + ra, initial_robot_c)];
 
             while queue.len() > 0 {
                 let (erow, ecol) = queue[0];
                 queue = queue[1..].to_vec();
 
-                if !is_in_bounds(map, erow + ra, ecol) {
+                if !is_in_bounds(map, erow, ecol) {
                     continue;
                 }
 
-                match map[(erow + ra) as usize][ecol as usize] {
-                    Wall | Empty => {}
+                match map[(erow) as usize][ecol as usize] {
+                    Empty => continue,
+
+                    // Can't move one box, so can't move the entire set
+                    Wall => return (initial_robot_r as usize, initial_robot_c as usize),
 
                     // we have '[' above of us
                     BoxLeft => {
-                        if !to_move.contains(&(erow + ra, ecol)) {
-                            to_move.push((erow + ra, ecol));
+                        if !to_move.contains(&(erow, ecol)) {
+                            to_move.push((erow, ecol));
                             queue.push((erow + ra, ecol));
                         }
 
-                        if !to_move.contains(&(erow + ra, ecol + 1)) {
-                            to_move.push((erow + ra, ecol + 1));
+                        if !to_move.contains(&(erow, ecol + 1)) {
+                            to_move.push((erow, ecol + 1));
                             queue.push((erow + ra, ecol + 1));
                         }
                     }
 
                     // we have ']' above of us
                     BoxRight => {
-                        if !to_move.contains(&(erow + ra, ecol)) {
-                            to_move.push((erow + ra, ecol));
+                        if !to_move.contains(&(erow, ecol)) {
+                            to_move.push((erow, ecol));
                             queue.push((erow + ra, ecol));
                         }
 
-                        if !to_move.contains(&(erow + ra, ecol - 1)) {
-                            to_move.push((erow + ra, ecol - 1));
+                        if !to_move.contains(&(erow, ecol - 1)) {
+                            to_move.push((erow, ecol - 1));
                             queue.push((erow + ra, ecol - 1));
                         }
                     }
@@ -332,44 +331,18 @@ fn make_move_p2(
                 }
             }
 
-            let mut moved = false;
-
             // move all to_moves by ra
             for (r, c) in to_move.iter().rev() {
-                if is_in_bounds(map, r + ra, *c)
-                    && matches!(map[(r + ra) as usize][*c as usize], Empty)
-                {
-                    moved = true;
-                    (
-                        map[*r as usize][*c as usize],
-                        map[(r + ra) as usize][*c as usize],
-                    ) = (
-                        map[(r + ra) as usize][*c as usize],
-                        map[*r as usize][*c as usize],
-                    );
-                }
-            }
-
-            // move the robot
-            if matches!(
-                map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
-                Empty
-            ) {
-                moved = true;
                 (
-                    map[initial_robot_r as usize][initial_robot_c as usize],
-                    map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
+                    map[*r as usize][*c as usize],
+                    map[(r + ra) as usize][*c as usize],
                 ) = (
-                    map[(initial_robot_r + ra) as usize][initial_robot_c as usize],
-                    map[initial_robot_r as usize][initial_robot_c as usize],
+                    map[(r + ra) as usize][*c as usize],
+                    map[*r as usize][*c as usize],
                 );
             }
 
-            if moved {
-                return ((to_move[0].0 + ra) as usize, to_move[0].1 as usize);
-            } else {
-                return ((to_move[0].0) as usize, to_move[0].1 as usize);
-            }
+            return ((initial_robot_r + ra) as usize, initial_robot_c as usize);
         }
 
         Moves::Left | Moves::Right => {
@@ -390,14 +363,12 @@ fn make_move_p2(
                         ecol += ca;
                     }
 
-                    Robot => panic!("Why another robot???"),
+                    Robot => {
+                        print_map(map);
+                        panic!("Why another robot???")
+                    }
                 }
             }
-
-            // println!(
-            //     "erow: {erow}, ecol: {ecol}, thingy: {:#?}",
-            //     map[erow as usize][ecol as usize]
-            // );
 
             // this one has to be empty, only then can we move
             if !matches!(map[erow as usize][ecol as usize], Empty) {
@@ -434,14 +405,12 @@ fn print_map<T: Display>(map: &Vec<Vec<T>>) {
     }
 }
 
-pub fn day15p1() {
+pub fn part1() {
     let (mut map, moves, (mut robot_row, mut robot_col)) = parse_input_p1();
 
     for robot_move in &moves {
         (robot_row, robot_col) =
             make_move_p1(&mut map, robot_move, robot_row as i32, robot_col as i32);
-
-        // print_map(&map);
     }
 
     let mut total = 0;
@@ -457,15 +426,12 @@ pub fn day15p1() {
     println!("Day15 P1: {total}");
 }
 
-pub fn day15p2() {
+pub fn part2() {
     let (mut map, moves, (mut robot_row, mut robot_col)) = parse_input_p2();
 
     for robot_move in &moves {
         (robot_row, robot_col) =
             make_move_p2(&mut map, robot_move, robot_row as i32, robot_col as i32);
-
-        println!("=============== Move: {robot_move:?}. Final Pos: ({robot_row},{robot_col}) =====================");
-        print_map(&map);
     }
 
     let mut total = 0;
@@ -477,6 +443,8 @@ pub fn day15p2() {
             }
         }
     }
+
+    print_map(&map);
 
     println!("Day15 P2: {total}");
 }

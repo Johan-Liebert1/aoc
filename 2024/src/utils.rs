@@ -35,7 +35,7 @@ pub fn read_file_to_u8(path: &str) -> Vec<u8> {
     return file_contents;
 }
 
-pub fn is_in_bounds<T: Sized>(map: &Vec<Vec<T>>, row: i32, col: i32) -> bool {
+pub fn is_in_bounds<T>(map: &Vec<Vec<T>>, row: i32, col: i32) -> bool {
     return row >= 0 && col >= 0 && row < map.len() as i32 && col < map[0].len() as i32;
 }
 

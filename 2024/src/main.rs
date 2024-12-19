@@ -23,5 +23,5 @@ mod day9;
 mod utils;
 
 fn main() {
-    day19::part2()
+    day15::part2()
 }
