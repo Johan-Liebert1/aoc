@@ -20,8 +20,9 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day20;
 mod utils;
 
 fn main() {
-    day15::part2()
+    day20::part1();
 }

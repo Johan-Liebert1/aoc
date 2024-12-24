@@ -3,6 +3,30 @@ use std::fs::File;
 use std::io::Read;
 use std::process::exit;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Map {
+    Empty,
+    Wall,
+    End,
+    Start,
+}
+
+impl Display for Map {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Map::Empty => ".",
+                Map::Wall => "#",
+                Map::End => "E",
+                Map::Start => "S",
+            }
+        )
+    }
+}
+
+
 pub fn read_file_to_string(path: &str) -> String {
     let file = File::open(path);
 

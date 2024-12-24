@@ -3,7 +3,7 @@ use std::{
     usize,
 };
 
-use crate::utils;
+use crate::utils::{self, is_in_bounds};
 
 type Grid = Vec<Vec<char>>;
 type Cache = Vec<Vec<bool>>;
@@ -55,10 +55,6 @@ const DIRECTIONS: [(i32, i32, CameFrom); 4] = [
     (0, -1, CameFrom::Left), // left
     (0, 1, CameFrom::Right), // right
 ];
-
-fn is_in_bounds(grid: &Grid, row: i32, col: i32) -> bool {
-    return row >= 0 && col >= 0 && row < grid.len() as i32 && col < grid[0].len() as i32;
-}
 
 fn is_neighbor(grid: &Grid, row: i32, col: i32, nrow: i32, ncol: i32) -> bool {
     return is_in_bounds(grid, row, col)
