@@ -156,11 +156,11 @@ pub fn part1() {
 }
 
 pub fn part2() {
-    let (mut map, (sr, sc), (er, ec)) = parse_input();
+    let (map, (sr, sc), (er, ec)) = parse_input();
 
-    let to_beat = bfs(&map, sr, sc, er, ec, usize::MAX);
+    let _to_beat = bfs(&map, sr, sc, er, ec, usize::MAX);
 
-    let mut saved_seconds: HashMap<usize, usize> = HashMap::new();
+    let mut _saved_seconds: HashMap<usize, usize> = HashMap::new();
 
     for row in 0..map.len() {
         for col in 0..map[0].len() {
@@ -168,5 +168,5 @@ pub fn part2() {
         }
     }
 
-    println!("{saved_seconds:?}");
+    println!("{_saved_seconds:?}");
 }

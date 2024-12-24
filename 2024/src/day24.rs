@@ -124,5 +124,4 @@ pub fn part1() {
     println!("Day24 P1: {s:?}");
 }
 
-pub fn part2() {
-}
+pub fn part2() {}
