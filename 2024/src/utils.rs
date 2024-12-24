@@ -26,7 +26,6 @@ impl Display for Map {
     }
 }
 
-
 pub fn read_file_to_string(path: &str) -> String {
     let file = File::open(path);
 
