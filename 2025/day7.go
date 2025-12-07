@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -80,7 +81,6 @@ func Day7P1() {
 		switch grid[nr][nc] {
 		case Beam:
 			continue
-			// panic(fmt.Sprintf("Found beam. %d, %d", nr, nc))
 
 		case Start:
 			panic("Found start")
@@ -109,4 +109,62 @@ func Day7P1() {
 	}
 
 	fmt.Println("Day7P1: ", totalSplit)
+}
+
+func splitBeam(grid grid, beam RowCol, depth int, cache map[string]int) int {
+	nr := beam.row + 1
+	nc := beam.col
+
+	key := strconv.Itoa(nr) + "-" + strconv.Itoa(nc)
+
+	if v, ok := cache[key]; ok {
+		return v
+	}
+
+	// This beam was at the very end of the grid so that's one path complete
+	if nr >= len(grid) {
+		return 1
+	}
+
+	s := 0
+
+	switch grid[nr][nc] {
+	case Beam:
+	case Start:
+		{
+		}
+
+	case Dot:
+		s = splitBeam(grid, RowCol{row: nr, col: nc}, depth+1, cache)
+
+	case Splitter:
+		{
+			if WithinBounds(grid, nr, nc-1) {
+				s += splitBeam(grid, RowCol{row: nr, col: nc - 1}, depth+1, cache)
+			}
+
+			if WithinBounds(grid, nr, nc+1) {
+				s += splitBeam(grid, RowCol{row: nr, col: nc + 1}, depth+1, cache)
+			}
+		}
+	}
+
+	cache[key] = s
+
+	return s
+}
+
+func Day7P2() {
+	grid, startRowCol := parseDay7()
+
+	// Start beaming
+	grid[startRowCol.row+1][startRowCol.col] = Beam
+
+	beams := []RowCol{{row: startRowCol.row + 1, col: startRowCol.col}}
+	
+	cache := map[string]int{}
+
+	timelines := splitBeam(grid, beams[0], 0, cache)
+
+	fmt.Println("Day7P2: ", timelines)
 }
